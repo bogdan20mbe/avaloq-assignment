@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet  id="20210103-1"  author="bogdan.manea">
+
+        <createSequence sequenceName="roll_dice_id_seq" startValue="1" incrementBy="1"/>
+        <createTable tableName="roll_dice">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nb_dice" type="int"/>
+            <column name="nb_rolls" type="int"/>
+            <column name="nb_sides" type="int"/>
+        </createTable>
+
+        <createSequence sequenceName="roll_dice_details_id_seq" startValue="1" incrementBy="1"/>
+        <createTable tableName="roll_dice_details">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="roll_dice_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rolls_sum" type="int"/>
+            <column name="rolls_sum_count" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="roll_dice_details" baseColumnNames="roll_dice_id"
+                                 constraintName="fk_roll_dice_details" referencedTableName="roll_dice"
+                                 referencedColumnNames="id"/>
+
+        <rollback>
+            <dropSequence sequenceName="roll_dice_details_id_seq"/>
+            <dropTable tableName="roll_dice_details"/>
+            <dropSequence sequenceName="roll_dice_id_seq"/>
+            <dropTable tableName="roll_dice"/>
+        </rollback>
+        
+    </changeSet>
+
+</databaseChangeLog>
